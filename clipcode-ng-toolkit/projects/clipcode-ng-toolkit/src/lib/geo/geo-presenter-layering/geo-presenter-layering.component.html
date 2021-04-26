@@ -1,0 +1,45 @@
+<div style="display: flex; flex-direction: column; height: 100%;">
+    <mat-toolbar color="primary" >
+      <button mat-icon-button (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon>      
+    </button>
+    <h1>Add Geo Layers</h1> 
+    </mat-toolbar>
+
+    <mat-checkbox [(ngModel)]="showBicyclingLayer">Bicycling Layer</mat-checkbox>
+    <mat-checkbox [(ngModel)]="showTrafficLayer">Traffic Layer</mat-checkbox>
+    <mat-checkbox [(ngModel)]="showTransitLayer">Transit Layer</mat-checkbox>  
+
+    <mat-radio-group [(ngModel)]="customDataSelection" (change)="onChange($event)">
+    <h2>data.gov.ie (sample selection)</h2>
+    <mat-radio-button [value]="1">Galway Flood Zone</mat-radio-button><br>
+    <mat-radio-button [value]="2">Wicklow Wind Energy Strategy Wicklow County Development Plan 2016 - 2022 Appendix 6</mat-radio-button><br>
+    <mat-radio-button [value]="3" >County Galway Protected Focal Points and Views</mat-radio-button><br>
+    <mat-radio-button [value]="4" >Bicycle Maintenance Stands SDCC</mat-radio-button><br>
+    <mat-radio-button [value]="5" >Hodson Bay LAP 2014 to 2020</mat-radio-button><br>
+      <h2>Custom</h2>
+    <mat-radio-button [value]="11" >Enter your own GeoJson location:</mat-radio-button>  
+    </mat-radio-group>
+
+    <p *ngIf="showCustomDataInput">Enter custom URL (geojson URL) </p>  
+    <input matInput [(ngModel)]="customDataString"  placeholder="custom geojson URL" >
+
+    <p style="text-align: center; justify-content:flex-end">
+      <button mat-raised-button *ngIf="(customDataSelection!='' && customDataSelection!='11') || showBicyclingLayer || showTrafficLayer || showTransitLayer " 
+      style="margin: 0.2cm;" color="primary"
+        type="button" (click)='onShow()'>Show</button>        
+
+        <button mat-raised-button *ngIf="customDataSelection=='11' && showCustomDataInput && customDataString.length!=0" 
+        style="margin: 0.2cm;" color="primary"
+          type="button" (click)='onShow()'>Show</button>        
+          
+        <button mat-raised-button style="margin: 0.2cm;" *ngIf="customDataSelection=='' && !showBicyclingLayer && !showTrafficLayer && !showTransitLayer"         
+        type="button" disabled>Show</button>        
+
+      <button mat-raised-button style="margin: 0.2cm;" *ngIf="customDataSelection=='11' && showCustomDataInput && customDataString.length==0"         
+        type="button" disabled>Show</button>        
+
+    <button mat-raised-button  type="button" 
+        style="margin: 0.2cm;" color="primary" (click)='onCancel()'>Cancel</button>
+    </p>
+    </div>

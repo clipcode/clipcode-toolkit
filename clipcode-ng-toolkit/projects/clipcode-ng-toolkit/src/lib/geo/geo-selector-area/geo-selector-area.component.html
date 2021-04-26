@@ -1,0 +1,31 @@
+  <div style="display: flex; flex-direction: column; height: 100%;">
+    <mat-toolbar color="primary" >
+      <button mat-icon-button (click)="onOK()">
+        <mat-icon>arrow_back</mat-icon>      
+    </button>
+    <h1>Select Area</h1> 
+    </mat-toolbar>
+
+    <div #myIdentifier style="padding-top: 0.2cm; padding-bottom: 0.2cm; flex: 1 1 auto;">
+ 
+<google-map #mymap 
+            [center]="center"
+            [zoom]="zoom"
+            height="100%"
+            width="100%"   
+            [options]="mapOptions"         
+            [mapTypeId]="mapTypeId">
+          </google-map> 
+</div>
+
+    <p style="text-align: center; justify-content:flex-end">
+
+      <button mat-raised-button style="margin: 0.2cm;"
+      color="primary"
+        type="button" (click)='onOK()'>OK</button>
+      
+      <button mat-raised-button  type="button" 
+      style="margin: 0.2cm;" 
+      color="primary"
+      (click)='onCancel()'>Cancel</button>
+      </p>

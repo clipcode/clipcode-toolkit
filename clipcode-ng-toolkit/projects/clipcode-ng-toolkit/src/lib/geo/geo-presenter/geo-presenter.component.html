@@ -1,0 +1,17 @@
+<div *ngIf="!(connected$ | async)"> 
+    <p>Mapping requires Internet connection</p>
+    <p>Status: Not Connected</p>
+    <button mat-raised-button type="button" color="primary"
+       (click)='onRetry()'>Retry
+    </button>
+</div>
+  
+<div *ngIf="(connected$ | async)"> 
+  <div *ngIf="!(apiLoaded$ | async)"> 
+    Status: API not loaded
+  </div>
+  <div *ngIf="apiLoaded$ | async"> 
+    <clipcode-geo-presenter-grid [dataItems]="dataItems" (action)="onAction($event)"> 
+    </clipcode-geo-presenter-grid>
+  </div>
+</div>

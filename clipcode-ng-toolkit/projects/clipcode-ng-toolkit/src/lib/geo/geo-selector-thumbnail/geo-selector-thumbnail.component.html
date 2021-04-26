@@ -1,0 +1,29 @@
+<table><tr>
+  <td>
+    <google-map #mymap
+    height="250px"
+    width="150px"
+      [center]="center"
+      [zoom]="zoom"
+      [mapTypeId]="mapTypeId"
+      (mapClick)="onShowLocationPicker('roadmap')">
+      <map-marker #marker
+        *ngFor="let markerPosition of markerPositions"
+            [position]="markerPosition"
+            [options]="markerOptions"></map-marker>
+    </google-map>    
+  
+  </td><td >
+    <button mat-raised-button type="button" color="primary"
+      (click)='onSelectCurrentLocation()'>Use Current</button><br>  
+      <label style="margin: 0.2cm;">Or select via:</label><br>
+    <button mat-raised-button color="primary" style="margin: 0.2cm;"
+      type="button" (click)='onShowLocationPicker("roadmap")'>Road Map</button><br>
+    <button mat-raised-button color="primary" style="margin: 0.2cm;"
+      type="button" (click)='onShowLocationPicker("satellite")'>Satellite</button><br>
+    <button mat-raised-button color="primary" style="margin: 0.2cm;"
+      type="button" (click)='onShowLocationPicker("terrain")'>Terrain Map</button><br>
+    <button mat-raised-button color="primary" style="margin: 0.2cm;"
+      type="button" (click)='onShowLocationPicker("hybrid")'>Hybrid Map</button>
+  </td>
+</tr></table>

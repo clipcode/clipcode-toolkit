@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{titleText}}</h1>
+<div mat-dialog-content>
+  <p>{{contentText}}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onYesClick()" cdkFocusInitial>{{yesText}}</button>
+  <button *ngIf="showNoText" mat-button (click)="onNoClick()">{{noText}}</button>
+</div>

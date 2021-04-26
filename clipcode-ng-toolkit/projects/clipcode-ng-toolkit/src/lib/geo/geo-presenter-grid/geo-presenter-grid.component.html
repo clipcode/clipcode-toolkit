@@ -1,0 +1,216 @@
+<section class="mat-typography"
+  *ngIf="currentPresenterDataItems != null && currentPresenterDataItems.length > 0">
+
+  <p>Count: {{observationTotalCount}} (with location: 
+    {{observationWithLocationCount}} / without: {{observationWithoutLocationCount}})</p>
+</section>
+
+<p>
+  Find Place: 
+  <input 
+  placeholder="Enter place name" size="30"
+  type="text" 
+  #placeAutoComplete> 
+  <mat-icon #tooltipDesignX9="matTooltip" 
+  (click)="tooltipDesignX9.toggle()" 
+  matTooltip="To zoom to a place, enter its name - as one of partial/full address, establishment name, location name" 
+  matTooltipPosition="right" style="margin-left: 5px">info</mat-icon></p>
+  
+  <section class="mat-typography"
+  *ngIf="currentPresenterDataItems != null && currentPresenterDataItems.length > 0">
+
+
+    <mat-menu #actionsMenu="matMenu" yPosition="above">
+      <button mat-menu-item (click)="onEdit()" >Edit</button>
+      <button mat-menu-item (click)="onDelete()">Delete</button>
+      <button mat-menu-item (click)="onArchive()">Archive</button>
+      <button mat-menu-item (click)="onClone()">Clone</button>
+    </mat-menu>
+
+    <mat-menu #directionsTo="matMenu">
+      <button mat-menu-item (click)="onDirectionsToPOI('BICYCLING')">Bicycling</button>
+      <button mat-menu-item (click)="onDirectionsToPOI('DRIVING')">Driving</button>
+      <button mat-menu-item (click)="onDirectionsToPOI('TRANSIT')">Transit</button>
+      <button mat-menu-item (click)="onDirectionsToPOI('TWO_WHEELER')">Two Wheeler</button>
+      <button mat-menu-item (click)="onDirectionsToPOI('WALKING')">Walking</button>
+    </mat-menu>
+
+    <mat-menu #directionsFrom="matMenu">
+      <button mat-menu-item (click)="onDirectionsFromPOI('BICYCLING')">Bicycling</button>
+      <button mat-menu-item (click)="onDirectionsFromPOI('DRIVING')">Driving</button>
+      <button mat-menu-item (click)="onDirectionsFromPOI('TRANSIT')">Transit</button>
+      <button mat-menu-item (click)="onDirectionsFromPOI('TWO_WHEELER')">Two Wheeler</button>
+      <button mat-menu-item (click)="onDirectionsFromPOI('WALKING')">Walking</button>
+    </mat-menu>
+
+    <mat-menu #geoToolsMenu="matMenu" yPosition="above">
+      <button mat-menu-item (click)="onElevation()">Elevation</button>
+      <button mat-menu-item (click)="onReverseGeocode()">Reverse Geocode</button>
+      <button mat-menu-item (click)="onDistance()">Distance To POI</button>
+      <button mat-menu-item [matMenuTriggerFor]="directionsTo">Directions To POI</button>
+      <button mat-menu-item [matMenuTriggerFor]="directionsFrom">Directions From POI</button>
+    </mat-menu>
+
+    <span *ngIf="!showGeoTools">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="geoToolsToggle()">Show Geo Tools</a>
+      <mat-icon #tooltipDesignP="matTooltip" 
+      (click)="tooltipDesignP.toggle()" 
+      matTooltip="Geo tools offer a  rich range of geospatial features" 
+      matTooltipPosition="right" style="margin-left: 5px">info</mat-icon>   
+    </span>
+
+    <div *ngIf="showGeoTools">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="geoToolsToggle()">Hide Geo Tools</a>
+      <mat-divider></mat-divider>
+ 
+    <mat-radio-group aria-label="Select an option" [(ngModel)]="markerDisplayMode">
+      <mat-radio-button style="margin: 0.1cm" value='clusterer' >Clusterer</mat-radio-button>
+      <mat-radio-button style="margin: 0.1cm" value='marker'>Marker</mat-radio-button>
+      <mat-radio-button style="margin: 0.1cm" value='heatmap'>Heatmap</mat-radio-button>
+    </mat-radio-group><mat-icon #tooltipDesignX6="matTooltip" 
+    (click)="tooltipDesignX6.toggle()" 
+    matTooltip="
+    Clusterer view displays markers that are close together as a single symbol with a count; Marker view shows all individual markers (good for small numbers of markers); Heatmap view is good for very large numbers of markers" 
+    matTooltipPosition="right" style="margin-left: 5px">info</mat-icon> 
+
+    <mat-divider></mat-divider>
+ 
+    POI:
+    <span *ngIf="!poiShow">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="poiToggle()">Show</a>
+      <mat-icon #tooltipDesignX="matTooltip" 
+      (click)="tooltipDesignX.toggle()" 
+      matTooltip="The Actions menu for each marker offers Distance and Directions features, which involves two points, the marker itself and another point - called Point Of Interest (POI) - which you need to set by simply clicking on the map" 
+      matTooltipPosition="right" style="margin-left: 5px">info</mat-icon>   
+    </span>
+
+    <span *ngIf="poiShow">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="poiToggle()">Hide</a>
+    </span>
+
+    <span *ngIf="poiShow">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="poiCenter()">Centre map</a>
+    </span>
+
+    <span *ngIf="poiShow">
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="poiCenterZoom()">Centre+zoom</a>
+    </span>
+
+    <mat-divider></mat-divider>
+    Current Location:
+
+    <span>
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="currentLocationSetPOI()">Set as POI</a>
+    </span>
+
+    <span>
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="currentLocationCenter()">Centre map</a>
+    </span>
+
+    <span>
+      <a mat-raised-button color="primary" style="margin-left:10px" (click)="currentLocationCenterZoom()">Centre+zoom</a>
+    </span>
+
+<mat-divider></mat-divider>
+
+    <a mat-raised-button color="primary"
+    (click)='onLayers()'>Layers</a>
+    <mat-icon #tooltipDesignX2="matTooltip" 
+      (click)="tooltipDesignX2.toggle()" 
+      matTooltip="You may add addtional data layers to the map" 
+      matTooltipPosition="right" style="margin-left: 5px">info</mat-icon>
+
+    <span > 
+      <p><input matInput size="30" [(ngModel)]="geocodeAddress" placeholder="Address to geocode">
+        <a mat-raised-button color="primary" style="margin-left:10px" (click)="onGeocode()">Geocode</a>
+        <mat-icon #tooltipDesignX1="matTooltip" 
+      (click)="tooltipDesignX1.toggle()" 
+      matTooltip="Converting a textual postal address (either partial or complete) into a location is known as geocoding" 
+      matTooltipPosition="right" style="margin-left: 5px">info</mat-icon>
+      </p>
+    </span>
+  </div>
+  <mat-divider></mat-divider>
+  <h2 *ngIf="outputText!=''">Geo Results</h2>
+    <textarea matInput rows="7" cols="40" readonly *ngIf="outputText!=''">{{outputText}}</textarea>
+    <p><a *ngIf="(directionsResults$ | async) || outputText!=''" 
+      mat-raised-button style="background:rgb(190, 190, 190);" 
+      (click)='hideOutputText()'>Hide Geo Results</a> 
+    </p>
+
+  <google-map [options]="mapOptions" #myMap id="map" *ngIf="markerDisplayMode=='clusterer'" 
+            height="400px"
+            width="95vw"
+            [center]="center"
+            [zoom]="zoom"            
+            [mapTypeId]="mapTypeId"            
+            (mapClick)="poiChange($event)"> 
+
+            <map-directions-renderer *ngIf="(directionsResults$ | async) as directionsResults"
+            [directions]="directionsResults"></map-directions-renderer>
+
+            <map-marker-clusterer [imagePath]="markerClustererImagePath">
+            <map-marker #marker="mapMarker"
+              *ngFor="let markerPosition of markerPositions; let cIndexNum=index"
+              [position]="markerPosition"
+              [options]="markerOptionsList[cIndexNum]"
+              (mapClick)="openInfoWindow(marker)"></map-marker>
+            </map-marker-clusterer> 
+            
+            <map-bicycling-layer *ngIf="showBicycling"></map-bicycling-layer>
+            <map-traffic-layer *ngIf="showTraffic" [autoRefresh]="false"></map-traffic-layer>
+            <map-transit-layer *ngIf="showTransit"></map-transit-layer>
+
+            <map-info-window>
+              <textarea matInput rows="7" readonly>{{metadataText}}</textarea>
+              <mat-divider></mat-divider> 
+               
+              <button  mat-raised-button [matMenuTriggerFor]="actionsMenu">Actions</button>
+              <button  mat-raised-button [matMenuTriggerFor]="geoToolsMenu">Geo Tools</button>
+            </map-info-window>               
+  </google-map>
+
+  <google-map [options]="mapOptions" #myMap *ngIf="markerDisplayMode=='marker'" 
+  height="400px"
+  width="95vw"
+  [center]="center"
+  [zoom]="zoom"            
+  [mapTypeId]="mapTypeId"
+  (mapClick)="poiChange($event)"> 
+
+  <map-directions-renderer *ngIf="(directionsResults$ | async) as directionsResults"
+                           [directions]="directionsResults"></map-directions-renderer>
+                           
+  <map-marker #marker="mapMarker"
+    *ngFor="let markerPosition of markerPositions; let cIndexNum=index"
+    [position]="markerPosition"
+    [options]="markerOptionsList[cIndexNum]"
+    (mapClick)="openInfoWindow(marker)"></map-marker>
+
+<map-info-window>
+  <textarea matInput rows="7" readonly>{{metadataText}}</textarea>
+  <mat-divider></mat-divider> 
+  <button  mat-raised-button [matMenuTriggerFor]="actionsMenu">Actions</button>
+  <button  mat-raised-button [matMenuTriggerFor]="geoToolsMenu">Geo Tools</button>
+</map-info-window>   
+
+<map-bicycling-layer *ngIf="showBicycling"></map-bicycling-layer>
+<map-traffic-layer *ngIf="showTraffic" [autoRefresh]="false"></map-traffic-layer>
+<map-transit-layer *ngIf="showTransit"></map-transit-layer>
+</google-map>
+
+<google-map [options]="mapOptions" #myMap *ngIf="markerDisplayMode=='heatmap'" 
+height="400px"
+width="95vw"
+[center]="center"
+[zoom]="zoom"            
+[mapTypeId]="mapTypeId"
+(mapClick)="poiChange($event)">          
+<map-heatmap-layer [data]="heatmapData" [options]="heatmapOptions"></map-heatmap-layer>
+           <map-bicycling-layer *ngIf="showBicycling"></map-bicycling-layer>
+            <map-traffic-layer *ngIf="showTraffic" [autoRefresh]="false"></map-traffic-layer>
+            <map-transit-layer *ngIf="showTransit"></map-transit-layer>
+ 
+          </google-map>
+
+</section>
